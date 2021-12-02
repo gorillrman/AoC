@@ -2,7 +2,7 @@
 import pandas as pd
 from pandas.core.indexes.base import Index
 
-# Read file
+# Read file into dataframe.
 depth = pd.read_csv('depth.txt', sep=" ", header=None)
 depth = pd.DataFrame(depth)
 depth.columns = ['depths']
