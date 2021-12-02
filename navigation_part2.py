@@ -3,6 +3,7 @@ import pandas as pd
 
 # create navigation instructions dataframe
 navInstructions = pd.read_csv('navigation.txt', sep=" ", header=None)
+#navInstructions = pd.read_csv('nav_test.txt', sep=" ", header=None)
 navInstructions.columns = ['direction', 'steps']
 
 # variables for tracking location
@@ -21,14 +22,12 @@ for i in range(len(navInstructions)):
         if aim != 0:
             depth = depth + navInstructions['steps'][i]*aim
     elif navInstructions['direction'][i] == 'down':
-        depth = depth + navInstructions['steps'][i]
         aim = aim + navInstructions['steps'][i]
         #aim = aimer(aim)
 
     else:
-        depth = depth - navInstructions['steps'][i]
         aim = aim - navInstructions['steps'][i]
-    print(aim)
+    print(aim, depth)
 
 location = depth * horizontal
 print(location)
