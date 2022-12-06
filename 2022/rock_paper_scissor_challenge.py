@@ -5,6 +5,7 @@ rps_data = pd.read_csv("rps_challenge_data.txt", sep=" ", header=None)
 rps_data.columns = ["them", "us"]
 rps_convert = pd.DataFrame()
 print(rps_data.shape)
+
 rock = 1
 paper = 2
 scissors = 3
@@ -101,3 +102,4 @@ print(ourscore)
 print(theirscore)
 print("wins", wins, " ties", ties, " losses", losses)
 print(rps_convert.head())
+print(rps_convert.shape)
