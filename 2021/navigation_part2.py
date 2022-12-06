@@ -11,11 +11,6 @@ horizontal = 0
 depth = 0
 aim = 0
 
-
-def aimer(aim):
-    currentAim = aim
-
-
 for i in range(len(navInstructions)):
     if navInstructions['direction'][i] == 'forward':
         horizontal = horizontal + navInstructions['steps'][i]
@@ -23,8 +18,6 @@ for i in range(len(navInstructions)):
             depth = depth + navInstructions['steps'][i]*aim
     elif navInstructions['direction'][i] == 'down':
         aim = aim + navInstructions['steps'][i]
-        #aim = aimer(aim)
-
     else:
         aim = aim - navInstructions['steps'][i]
     print(aim, depth)

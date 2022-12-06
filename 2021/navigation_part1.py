@@ -2,7 +2,7 @@
 import pandas as pd
 
 # create navigation instructions dataframe
-navInstructions = pd.read_csv('navigation.txt', sep=" ", header=None)
+navInstructions = pd.read_csv("navigation.txt", sep=" ", header=None)
 navInstructions.columns = ['direction', 'steps']
 
 # variables for tracking location
