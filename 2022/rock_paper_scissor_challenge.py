@@ -1,10 +1,14 @@
 import pandas as pd
+import datetime as dt
 summer = 0
 #rps_data = pd.read_csv("rps_sample.txt", sep=" ", header=None)
 rps_data = pd.read_csv("rps_challenge_data.txt", sep=" ", header=None)
 rps_data.columns = ["them", "us"]
 rps_convert = pd.DataFrame()
 print(rps_data.shape)
+rightNow = dt.datetime.now()
+date_label = rightNow.strftime("%m%d%Y_%H%M%S")
+print(date_label)
 
 rock = 1
 paper = 2
@@ -21,15 +25,50 @@ theirscores = []
 wins = 0
 ties = 0
 losses = 0
+tSelection = []
+oSelection = []
+winLose = []
+uChoice = ""
+tChoice = ""
 
 
 def score_eval(score):
-    if score == "A" or score == "X":  # rock
+    if score == "A":  # or score == "X"
+        score = "Rock"
+    elif score == "B":  # or score == "Y"
+        score = "Paper"
+    elif score == "C":  # or score == "Z"
+        score = "Scissors"
+    return score
+
+
+def choice_value(score):
+    if score == "Rock":  # or score == "X":
         score = 1
-    elif score == "B" or score == "Y":  # paper
+    elif score == "Paper":  # or score == "Y":
         score = 2
-    elif score == "C" or score == "Z":  # scissors
+    elif score == "Scissors":  # or score == "Z":
         score = 3
+    return score
+
+
+def theFix(tChoice, us):
+    if us == "X":
+        if tChoice == "Rock":
+            score = "Scissors"
+        elif tChoice == "Scissors":
+            score = "Paper"
+        else:
+            score = "Rock"
+    elif us == "Y":
+        score = tChoice
+    else:
+        if tChoice == "Rock":
+            score = "Paper"
+        elif tChoice == "Scissors":
+            score = "Rock"
+        else:
+            score = "Scissors"
     return score
 
 
@@ -40,71 +79,44 @@ def score_eval(score):
 for i in range(len(rps_data)):
     them = rps_data['them'][i]
     us = rps_data['us'][i]
-    them = score_eval(them)
-    us = score_eval(us)
+    tChoice = score_eval(them)
+    uChoice = theFix(tChoice, us)
 
-    if them > us:  # loss
+    if (tChoice == "Rock" and uChoice == "Scissors") or (tChoice == "Scissors" and uChoice == "Paper") or (tChoice == "Paper" and uChoice == "Rock"):
+        winLose.append("Loss")
         losses += 1
-        # update our score
-        if us == rock:  # 1 point for rock
-            ourscore = ourscore + rock
-            ourscores.append(rock)  # appending to score tracker list for us
-        elif us == paper  # 2 points for paper
-        ourscore = ourscore + paper
-        ourscores.append(paper)
-        else:
-            ourscore = ourscore + scissors  # 3 points for scissors
-            ourscores.append(scissors)
-        # update their score
-        if them == scissors:
-            # 3 points for scissors and 6 points for win
-            theirscore = theirscore + scissors + win
-            theirscores.append(scissors + win)
-        elif them == paper:
-            theirscore = theirscore + paper + win  # 2 points for paper and 6 points for win
-            theirscores.append(paper+win)b
-        # No need to test for rock it would be a loss or a tie
-
-    elif them < us:  # testing for win
-        wins += 1  # update wins count
-        if us == paper:
-            ourscore = ourscore + paper + win  # 2 points for paper and 6 points for win
-            ourscores.append(paper + win)
-        else:
-            # 3 points for scissors and 6 points for win
-            ourscore = ourscore + scissors + win
-            ourscores.append(scissors + win)
-        if them == rock:
-            theirscore = theirscore + rock  # 1 point for rock and 0 for loss
-            theirscores.append(rock)
-        elif them == paper:  # 2 points for paper and 0 for loss
-            theirscore = theirscore + paper
-            theirscores.append(paper)
-        else:
-            theirscore = theirscore + scissors  # 3 points for scissors
-            theirscores.append(scissors)
-
-    else:  # default for ties
+        ourscore = ourscore + choice_value(uChoice)
+        ourscores.append(choice_value(us))
+        oSelection.append(uChoice)
+        theirscore = theirscore + choice_value(tChoice) + win
+        theirscores.append(choice_value(tChoice) + win)
+        tSelection.append(tChoice)
+    elif (tChoice == "Rock" and uChoice == "Paper") or (tChoice == "Paper" and uChoice == "Scissors") or (tChoice == "Scissors" and uChoice == "Rock"):
+        winLose.append("Win")
+        wins += 1
+        ourscore = ourscore + choice_value(uChoice) + win
+        ourscores.append(choice_value(uChoice)+win)
+        oSelection.append(uChoice)
+        theirscore = theirscore + choice_value(tChoice)
+        theirscores.append(choice_value(tChoice))
+        tSelection.append(tChoice)
+    else:
+        winLose.append("Tie")
         ties += 1
-        if us == rock:
-            ourscore = ourscore + rock + tie
-            theirscore = theirscore + rock + tie
-            ourscores.append(rock+tie)
-            theirscores.append(rock+tie)
-        elif us == paper:
-            ourscore = ourscore + paper + tie
-            theirscore = theirscore + paper + tie
-            ourscores.append(paper + tie)
-            theirscores.append(paper + tie)
-        else:
-            ourscore = ourscore + scissors + tie
-            theirscore = theirscore + scissors + tie
-            ourscores.append(scissors + tie)
-            theirscores.append(scissors + tie)
-rps_convert['them'] = theirscores
-rps_convert['us'] = ourscores
-print("Our score ", ourscore)
-print("Their score ", theirscore)
+        ourscore = ourscore + choice_value(uChoice) + tie
+        ourscores.append(choice_value(uChoice) + tie)
+        oSelection.append(uChoice)
+        theirscore = theirscore + choice_value(tChoice) + tie
+        theirscores.append(choice_value(tChoice)+tie)
+        tSelection.append(tChoice)
+
+rps_data['themValue'] = theirscores
+rps_data['usValue'] = ourscores
+rps_data['theirSelection'] = tSelection
+rps_data['ourSelection'] = oSelection
+rps_data['WinLose'] = winLose
+print(ourscore)
+print(theirscore)
 print("wins", wins, " ties", ties, " losses", losses)
-print(rps_convert.head())
-print(rps_convert.shape)
+print(rps_data)
+rps_data.to_csv("rps_fixed_"+date_label+".csv", index=False)

@@ -1,0 +1,4 @@
+them,us,themValue,usValue,theirSelection,ourSelection,WinLose
+A,Y,1,8,Rock,Paper,Win
+B,X,8,1,Paper,Rock,Loss
+C,Z,6,6,Scissors,Scissors,Tie
