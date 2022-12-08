@@ -10,8 +10,8 @@ rock = 1
 paper = 2
 scissors = 3
 win = 6
-lose = 0
 tie = 3
+lose = 0
 them = 0
 us = 0
 ourscore = 0
@@ -24,11 +24,11 @@ losses = 0
 
 
 def score_eval(score):
-    if score == "A" or score == "X":
+    if score == "A" or score == "X":  # rock
         score = 1
-    elif score == "B" or score == "Y":
+    elif score == "B" or score == "Y":  # paper
         score = 2
-    elif score == "C" or score == "Z":
+    elif score == "C" or score == "Z":  # scissors
         score = 3
     return score
 
@@ -43,43 +43,48 @@ for i in range(len(rps_data)):
     them = score_eval(them)
     us = score_eval(us)
 
-    if them > us:
+    if them > us:  # loss
         losses += 1
-        if us == rock:
+        # update our score
+        if us == rock:  # 1 point for rock
             ourscore = ourscore + rock
-            ourscores.append(rock)
-        elif us == paper or them == p:
-            ourscore = ourscore + paper
-            ourscores.append(paper)
+            ourscores.append(rock)  # appending to score tracker list for us
+        elif us == paper  # 2 points for paper
+        ourscore = ourscore + paper
+        ourscores.append(paper)
         else:
-            ourscore = ourscore + scissors
+            ourscore = ourscore + scissors  # 3 points for scissors
             ourscores.append(scissors)
+        # update their score
         if them == scissors:
+            # 3 points for scissors and 6 points for win
             theirscore = theirscore + scissors + win
             theirscores.append(scissors + win)
         elif them == paper:
-            theirscore = theirscore + paper + win
-            theirscores.append(paper+win)
+            theirscore = theirscore + paper + win  # 2 points for paper and 6 points for win
+            theirscores.append(paper+win)b
+        # No need to test for rock it would be a loss or a tie
 
-    elif them < us:
-        wins += 1
+    elif them < us:  # testing for win
+        wins += 1  # update wins count
         if us == paper:
-            ourscore = ourscore + paper + win
+            ourscore = ourscore + paper + win  # 2 points for paper and 6 points for win
             ourscores.append(paper + win)
         else:
+            # 3 points for scissors and 6 points for win
             ourscore = ourscore + scissors + win
             ourscores.append(scissors + win)
         if them == rock:
-            theirscore = theirscore + rock
+            theirscore = theirscore + rock  # 1 point for rock and 0 for loss
             theirscores.append(rock)
-        elif them == paper:
+        elif them == paper:  # 2 points for paper and 0 for loss
             theirscore = theirscore + paper
             theirscores.append(paper)
         else:
-            theirscore = theirscore + scissors
+            theirscore = theirscore + scissors  # 3 points for scissors
             theirscores.append(scissors)
 
-    else:
+    else:  # default for ties
         ties += 1
         if us == rock:
             ourscore = ourscore + rock + tie
@@ -98,8 +103,8 @@ for i in range(len(rps_data)):
             theirscores.append(scissors + tie)
 rps_convert['them'] = theirscores
 rps_convert['us'] = ourscores
-print(ourscore)
-print(theirscore)
+print("Our score ", ourscore)
+print("Their score ", theirscore)
 print("wins", wins, " ties", ties, " losses", losses)
 print(rps_convert.head())
 print(rps_convert.shape)
